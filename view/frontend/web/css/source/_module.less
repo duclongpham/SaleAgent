@@ -1,0 +1,166 @@
+
+
+& when (@media-common = true) {
+    @color__gray: #eee;
+    @color__blue: #1979c3;
+    .search {
+        &__form {
+            max-width: 400px;
+            position: relative;
+            margin-bottom: 20px;
+
+            &--input {
+                
+                input {
+                    border: 1px solid #eee;
+                    border-radius: 21px;
+                    padding: 20px 15px;
+                    position: relative;
+                    z-index: 30;
+                    margin-left: auto;
+                }
+            }
+            &--result {
+                border: 1px solid #eee;
+                border-top: unset;
+                position: absolute;
+                top: 50%;
+                padding: 45px 15px 15px;
+                z-index: 10;
+                background: #fff;
+                right: 0;
+                left: 0;
+            }
+
+            &--right {}
+            
+            
+        }
+
+        &__item{
+            display: flex;
+            &--group {
+                .name {
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                .sku {
+                    font-size: 16px;
+                    font-weight: 400;
+                    color: rgb(143, 143, 143);
+                }
+                .sku-code {}
+                .price {
+                    color: red;
+                }
+            }
+            &--left {
+                display: flex;
+                align-items: center;
+                width: 35%;
+
+                img {
+                    width: 100%;
+                    height:auto;
+                }
+            }
+
+            &--right {
+                display: flex;
+                width: 65%;
+            }
+            &--checkbox {
+                margin-left: auto;
+            }
+        }
+    }
+
+    .table-scroll{
+        /*width:100%; */
+        display: block;
+        empty-cells: show;
+
+        /* Decoration */
+        border-spacing: 0;
+        border: 1px solid @color__gray;
+
+        thead, tfoot {
+            position:relative;
+            display: block;
+            width:100%;
+            overflow-y: scroll;
+            color: #fff;
+            background-color: @color__blue;
+        }
+
+        tbody{
+            /* Position */
+            display: block; 
+            position:relative;
+            width:100%; 
+            overflow-y:scroll;
+            /* Decoration */
+            border-top: 1px solid @color__gray;
+
+            tr:nth-child(2n){
+                background-color: @color__gray;
+            }
+        }
+
+        tr{
+            width: 100%;
+            display:flex;
+        }
+
+        td,
+        th{
+            flex-basis:100%;
+            flex-grow:2;
+            display: block;
+            padding: 1rem;
+            text-align:left;
+        }
+        .small-first-col td:first-child,
+        .small-first-col th:first-child{
+            flex-basis:20%;
+            flex-grow:1;
+        }
+    }
+
+    .body-half-screen{
+        height: 50vh;
+    }
+    
+    .small-col{
+        flex-basis:10%;
+    }
+    .icon-trash {
+        .lib-icon-font(@icon-trash);
+    }
+
+    .product__detail {
+        display: flex;
+        &--left {
+            width: 45%;
+            img {
+                width: 100%;
+            }
+        }
+
+        &--right {
+            width: 45%;
+        }
+
+        &--tool {
+            width: 10%;
+        }
+    }
+    .qty {
+        display: inline-block;
+        button {}
+        input {
+            width: 38px;
+        }
+    }
+}
+

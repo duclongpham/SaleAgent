@@ -1,0 +1,84 @@
+<div>
+    <div class="search__form">
+        <div class="search__form--input">
+            <input type="text" class="form-control" placeholder="Search"
+                data-bind="value: search, valueUpdate: 'afterkeydown',event: {keyup: evenSearch}, hasFocus: isSelected">
+        </div>
+        <div class="search__form--result" data-bind="visible: result_search().length == 0 && isSelected">Not found</div>
+        <div class="search__form--result"
+            data-bind="foreach: result_search, visible: result_search().length && result_search_has_focus, event: { mouseover: function(){result_search_focus(true)}, mouseout: function(){result_search_focus(false)} }">
+            <div class="search__item">
+                <div class="search__item--left">
+                    <img src='' data-bind="attr: {src: src}" alt="img product" width="50px" height="50px">
+                </div>
+                <div class="search__item--right">
+                    <div class="search__item--group">
+                        <p class='name' data-bind="text: name"></p>
+                        <p class='sku'>SKU#: <span class="sku-code" data-bind="text: sku"></span></p>
+                        <p class='price' data-bind="text: price"></p>
+                    </div>
+                    <div class="search__item--checkbox">
+                        <input type="checkbox" data-bind="checked: isCheck, event: { change: $parent.check }">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-flush">
+        <table class="table-scroll small-first-col">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>PRODUCT</th>
+                    <th>QTY</th>
+                    <th>SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody class="body-half-screen" data-bind="foreach: productList">
+                <tr>
+                    <td data-bind="text: sku"></td>
+                    <td data-bind="with: product">
+                        <div class="product__detail">
+                            <div class="product__detail--left">
+                                <img src='' data-bind="attr: {src: src}" alt="">
+                            </div>
+                            <div class="product__detail--right">
+                                <div class="name" data-bind="text: name"></div>
+                                <div class="product__detail">
+                                    <span data-bind="text: "></span>
+                                    <span data-bind="text: price"></span>
+                                </div>
+                            </div>
+                            <div class="product__detail--tool">
+                                <span class="icon-trash"></span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="qty">
+                            <button data-bind="click: qtyDown()">-</button>
+                            <input type="number" data-bind="value: qty">
+                            <button data-bind="click: qtyUp()">+</button>
+                        </div>
+                    </td>
+                    <td><span data-bind="text: symbol"></span> <span data-bind="text: total"></span></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th>Filter lines Number: <span data-bind="text: countLine"></span></th>
+                    <th>Total Qty: <span data-bind="text: countQty"></span></th>
+                    <th>Sub Total:<span data-bind="text: symbol"></span> <span data-bind="text: subTotal"></span>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="input-group-btn">
+            <button class="btn btn-default" type="submit" data-bind="click: addtocart">
+                Add cart
+            </button>
+        </div>
+    </div>
+</div>
