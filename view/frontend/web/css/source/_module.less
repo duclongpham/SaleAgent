@@ -38,7 +38,7 @@
         }
 
         &__item{
-            display: flex;
+            .lib-vendor-prefix-display();
             &--group {
                 .name {
                     font-size: 18px;
@@ -55,8 +55,8 @@
                 }
             }
             &--left {
-                display: flex;
-                align-items: center;
+                .lib-vendor-prefix-display();
+                .lib-css(align-items, center, 1);
                 width: 35%;
 
                 img {
@@ -66,7 +66,7 @@
             }
 
             &--right {
-                display: flex;
+                .lib-vendor-prefix-display();
                 width: 65%;
             }
             &--checkbox {
@@ -109,21 +109,25 @@
 
         tr{
             width: 100%;
-            display:flex;
+            .lib-vendor-prefix-display();
         }
 
         td,
         th{
-            flex-basis:100%;
-            flex-grow:2;
+            .lib-vendor-prefix-flex-basis(100%);
+            .lib-vendor-prefix-flex-grow(2);
             display: block;
             padding: 1rem;
             text-align:left;
+            white-space: nowrap;
+            .lib-vendor-prefix-display();
+            .lib-vendor-prefix-flex-direction();
+            .lib-css(justify-content, center, 1);
         }
         .small-first-col td:first-child,
         .small-first-col th:first-child{
-            flex-basis:20%;
-            flex-grow:1;
+            .lib-vendor-prefix-flex-basis(20%);
+            .lib-vendor-prefix-flex-grow(1);
         }
     }
 
@@ -132,14 +136,16 @@
     }
     
     .small-col{
-        flex-basis:10%;
+        .lib-vendor-prefix-flex-basis(10%);
     }
     .icon-trash {
         .lib-icon-font(@icon-trash);
     }
 
     .product__detail {
-        display: flex;
+        .lib-vendor-prefix-display();
+        .lib-css(justify-content, center, 1);
+        .lib-css(align-items, center, 1);
         &--left {
             width: 45%;
             img {
@@ -149,18 +155,45 @@
 
         &--right {
             width: 45%;
+            display: inline;
+
         }
 
         &--tool {
             width: 10%;
+            display: inline;
+            height: min-content;
         }
     }
     .qty {
         display: inline-block;
-        button {}
-        input {
-            width: 38px;
+        width: auto;
+        margin-right: auto;
+
+        border: 1px solid #eee;
+        border-radius: 20px;
+        padding: 0px 10px;
+        button {
+            box-shadow: none;
+            background: #fff;
+            border: unset;
+            &:hover {
+                background: #fff;
+                border: unset;
+            }
         }
+        input {
+            text-align: center;
+            width: 38px;
+            border: unset;
+
+            &:focus {
+                box-shadow: unset;
+            }
+        }
+    }
+    .add-cart {
+        margin-top: 20px;
     }
 }
 
