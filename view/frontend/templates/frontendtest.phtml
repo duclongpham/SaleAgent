@@ -1,0 +1,63 @@
+<?php
+
+/** @var \AHT\SaleAgent\Block\Template $block */
+?>
+<h1>Modal Test Page</h1>
+<div class="template">
+    <button id="button1">
+        <span><?= $block->escapeHtml(__('Open Modal')) ?></span>
+    </button>
+
+    <button id="button2">
+        <span><?= $block->escapeHtml(__('Open Magento Login Modal')) ?></span>
+    </button>
+
+    <button id="button3">
+        <span><?= $block->escapeHtml(__('Open Custom Login Modal')) ?></span>
+    </button>
+
+    <div id="modal1">
+        <div class="modal-body-content">
+            <h2><?= $block->escapeHtml(__('Title')) ?></h2>
+            <p><?= $block->escapeHtml(__('Content')) ?></p>
+        </div>
+    </div>
+
+    <div id="modal2">
+        <div class="modal-body-content">
+            <h2><?= $block->escapeHtml(__('Title')) ?></h2>
+            <p><?= $block->escapeHtml(__('Content')) ?></p>
+        </div>
+    </div>
+
+    <div id="modal3">
+        <div class="modal-body-content">
+            <h2><?= $block->escapeHtml(__('Title')) ?></h2>
+            <p><?= $block->escapeHtml(__('Content')) ?></p>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    require([
+        'jquery',
+        "Magento_Ui/js/modal/modal"
+    ], function($, modal) {
+        var options = {
+            type: 'popup',
+            responsive: true,
+            title: 'Main title',
+            buttons: [{
+                text: $.mage.__('Ok'),
+                class: '',
+                click: function() {
+                    this.closeModal();
+                }
+            }]
+        };
+
+        var popup = modal(options, $('#modal'));
+        $("#button").click(function() {
+            $('#modal').modal('openModal');
+        });
+    })
+</script>

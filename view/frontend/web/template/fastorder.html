@@ -38,20 +38,19 @@
             <tbody class="body-half-screen" data-bind="foreach: productList">
                 <tr>
                     <td data-bind="text: sku"></td>
-                    <td data-bind="with: product">
+                    <td>
                         <div class="product__detail">
                             <div class="product__detail--left">
-                                <img src='' data-bind="attr: {src: src}" alt="">
+                                <img src='' data-bind="attr: {src: product().src}" alt="">
                             </div>
                             <div class="product__detail--right">
-                                <div class="name" data-bind="text: name"></div>
+                                <div class="name" data-bind="text: product().name"></div>
                                 <div class="product__detail">
-                                    <span data-bind="text: "></span>
-                                    <span data-bind="text: price"></span>
+                                    <span data-bind="text: product().price"></span>
                                 </div>
                             </div>
                             <div class="product__detail--tool">
-                                <span class="icon-trash"></span>
+                                <span class="icon-trash" data-bind="click: $parent.delete"></span>
                             </div>
                         </div>
                     </td>
@@ -62,21 +61,30 @@
                             <button data-bind="click: qtyUp">+</button>
                         </div>
                     </td>
-                    <td><span data-bind="text: symbol"></span> <span data-bind="text: total"></span></td>
+                    <td>
+                        <p>
+                            <span data-bind="text: symbol"></span> <span data-bind="text: total"></span>
+                        </p>
+                    </td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
                     <th></th>
-                    <th>Filter lines Number: <span data-bind="text: countLine"></span></th>
-                    <th>Total Qty: <span data-bind="text: countQty"></span></th>
-                    <th>Sub Total:<span data-bind="text: symbol"></span> <span data-bind="text: subTotal"></span>
+                    <th>
+                        <p>Filter lines Number: <span data-bind="text: countLine"></span></p>
+                    </th>
+                    <th>
+                        <p>Total Qty: <span data-bind="text: countQty"></span></p>
+                    </th>
+                    <th>
+                        <p>Sub Total:<span data-bind="text: symbol"></span> <span data-bind="text: subTotal"></span></p>
                     </th>
                 </tr>
             </tfoot>
         </table>
-        <div class="input-group-btn">
-            <button class="btn btn-default" type="submit" data-bind="click: addtocart">
+        <div class="add-cart">
+            <button type="submit" data-bind="click: addtocart, visible: productList().length > 0">
                 Add cart
             </button>
         </div>

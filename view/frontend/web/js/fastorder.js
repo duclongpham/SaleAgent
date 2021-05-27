@@ -4,7 +4,8 @@ define([
     'uiComponent',
     'mage/url',
     'mage/storage',
-], function (ko, $, Component, urlBuilder, storage) {
+    'Magento_Customer/js/customer-data'
+], function (ko, $, Component, urlBuilder, storage, customerData) {
     'use strict';
 
     function product(item, symbol) {
@@ -83,8 +84,9 @@ define([
         self.countQty = ko.computed(function () {
             var totalQty = 0;
             ko.utils.arrayFilter(self.productList(), function (product) {
-                totalQty = totalQty + product.qty();
+                totalQty = totalQty + product.qty(); console.log(totalQty);
             });
+
             return totalQty;
         })
 
@@ -104,17 +106,21 @@ define([
                     exist = true;
                 }
             });
-            console.log(exist)
             return exist;
         }
-
+        self.delete = function (item) {
+            self.productList.remove(item);
+            ko.utils.arrayFilter(self.result_search(), function (product) {
+                if (product.entity_id == item.getId) {
+                    product.isCheck(false);
+                }
+            });
+        }
         self.check = function (item) {
-
             var exist = false;
             var idProducSearch = item.entity_id;
             var productExists = false;
             ko.utils.arrayFilter(self.productList(), function (product) {
-                console.log(product)
                 if (product.getId == idProducSearch) {
                     exist = true;
                     productExists = product;
@@ -139,15 +145,25 @@ define([
                     'qty': product.qty()
                 })
             });
+
             var result = storage.post(
                 serviceUrl,
                 JSON.stringify(data),
                 false
             ).done(
-                function (response) {
+                function (response, status) {
+                    if (status == 'success') {
+                        alert('add cart success');
+                        // location.reload();
+                        self.productList([]);
+                        self.result_search([]);
+                        self.search('');
+                        customerData.reload(['cart'], true);
+                    }
                 }
-            ).fail(
-            );
+            ).fail(function () {
+                alert('add cart fail');
+            });
         }
     }
 
