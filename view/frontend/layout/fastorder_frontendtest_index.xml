@@ -3,6 +3,8 @@
     <body>
         <referenceContainer name="content">
             <block class="Magento\Framework\View\Element\Template" name="fastorder_frontendtest" template="AHT_SaleAgent::frontendtest.phtml" />
+            <!-- /var/www/html/magento3/vendor/magento/module-customer/view/frontend/web/template/authentication-popup.html -->
+            <!-- /var/www/html/magento3/vendor/magento/module-customer/view/frontend/web/js/view/authentication-popup.js -->
         </referenceContainer>
     </body>
 </page>
