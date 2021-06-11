@@ -15,16 +15,28 @@
                     <div class="search__item--group">
                         <p class='name' data-bind="text: name"></p>
                         <p class='sku'>SKU#: <span class="sku-code" data-bind="text: sku"></span></p>
-                        <p class='price' data-bind="text: price"></p>
+                        <p class='price' data-bind="text: price_show"></p>
                     </div>
                     <div class="search__item--checkbox">
                         <input type="checkbox" data-bind="checked: isCheck, event: { change: $parent.check }">
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
+    <label for="">Sort</label>
+    <select name="" id="" data-bind="value: sort_product">
+        <option value="-1">-- sort by --</option>
+        <!-- ko foreach: sort_product_config -->
+        <option value="" data-bind="attr: {value: value}, text: label"></option>
+        <!-- /ko -->
+    </select>
+    <label for="">show</label>
+    <select name="" id="" data-bind="value: show_max">
+        <!-- ko foreach: show_max_config -->
+        <option value="" data-bind="attr: {value: value}, text: label"></option>
+        <!-- /ko -->
+    </select>
     <div class="container-flush">
         <table class="table-scroll small-first-col">
             <thead>

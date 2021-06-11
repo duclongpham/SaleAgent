@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <fast_order>
+            <general>
+                <show_max>5,10,15</show_max>
+                <sort>name=asc,name=desc,price=desc,price=asc</sort>
+                <show_all>1</show_all>
+            </general>
+        </fast_order>
+    </default>
+</config>

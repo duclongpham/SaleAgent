@@ -6,14 +6,16 @@
 <div id='fastorder_template' data-bind="scope: 'fastorder'">
     <!-- ko template: getTemplate() -->
     <!-- /ko  -->
+    <script>
+        window.configs = <?= /* @escapeNotVerified */ \Zend_Json::encode($block->getConfig()) ?>
+    </script>
     <script type="text/x-magento-init">
         {
         "#fastorder_template": {
             "Magento_Ui/js/core/app": {
                 "components": {
                     "fastorder": {
-                        "component": "AHT_SaleAgent/js/fastorder",
-                        "template" : "AHT_SaleAgent/fastorder"
+                        "component": "AHT_SaleAgent/js/fastorder"
                     }
                 }
             }

@@ -1,0 +1,24 @@
+<?php
+
+/** @var \AHT\SaleAgent\Block\Template $block */
+
+$products = $block->getProduct();
+$symbol = $block->getSymbol();
+?>
+<?php foreach ($products as $product) : ?>
+    <div class="search__item">
+        <div class="search__item--left">
+            <img src='<?= $product->getSrc() ?>' alt="img product" width="50px" height="50px">
+        </div>
+        <div class="search__item--right">
+            <div class="search__item--group">
+                <p class='name'><?= $product->getData('name') ?></p>
+                <p class='sku'>SKU#: <span class="sku-code"><?= $product->getData('sku') ?></span></p>
+                <p class='price'><?= $symbol . $block->getPrice($product) ?></p>
+            </div>
+            <div class="search__item--checkbox">
+                <input type="checkbox" name="orderThis" data-value='<?= $product->getId() ?>'>
+            </div>
+        </div>
+    </div>
+<?php endforeach ?>

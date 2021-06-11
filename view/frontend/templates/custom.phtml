@@ -1,0 +1,194 @@
+<?php
+
+/** @var \AHT\SaleAgent\Block\Template $block */
+
+$configs = $block->getConfig();
+?>
+
+<div id='fastorder_template'>
+    <div>
+        <div class="search__form">
+            <div class="search__form--input">
+                <input type="text" class="form-control" placeholder="Search" id="fastorder_search">
+            </div>
+            <div class="search__form--result" style="display: none">Not found</div>
+        </div>
+        <label for="">Sort</label>
+        <select name="" id="fastorder_sort">
+            <?php foreach ($configs['sort'] as $value) : ?>
+                <option value="<?= $value['value'] ?>"><?= $value['label'] ?></option>
+            <?php endforeach ?>
+        </select>
+        <label for="">show</label>
+        <select name="" id="fastorder_show">
+            <?php foreach ($configs['show_max'] as $value) : ?>
+                <option value="<?= $value['value'] ?>"><?= $value['label'] ?></option>
+            <?php endforeach ?>
+        </select>
+        <div class="container-flush" id="fastorder__listorder">
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    require([
+        'jquery',
+        'mage/url',
+        'mage/storage',
+        'Magento_Customer/js/customer-data'
+    ], function($, urlBuilder, storage, customerData) {
+        function isShowFormResult(isInputFocus = null, isResultFocus = null) {
+
+            if (window.isInputFocus == undefined) {
+                if (isInputFocus === null) isInputFocus = 0;
+                window.isInputFocus = isInputFocus;
+            }
+
+            if (window.isResultFocus === undefined) {
+                if (isResultFocus === null) isResultFocus = 0;
+                window.isResultFocus = isResultFocus;
+            }
+
+            if (isInputFocus === null) {
+                isInputFocus = window.isInputFocus;
+            } else {
+                window.isInputFocus = isInputFocus;
+            }
+
+            if (isResultFocus === null) {
+                isResultFocus = window.isResultFocus;
+            } else {
+                window.isResultFocus = isResultFocus;
+            }
+            // console.log([isInputFocus, isResultFocus]);
+            if (isInputFocus || isResultFocus) {
+                $('.search__form--result').css({
+                    'display': 'block'
+                });
+            } else {
+                $('.search__form--result').css({
+                    'display': 'none'
+                });
+            }
+        }
+
+        function reComput(upOrDown, qty, price, currentElementRow) {
+            var element_total_price = $('.total_price');
+            var element_total_qty = $('.total_qty');
+            var element_subTotal = currentElementRow.find('.subtotal_price')
+            var total_price = element_total_price.attr('data-total-price');
+            var total_qty = element_total_qty.attr('data-total-qty');
+            upOrDown = Number(upOrDown);
+            price = Number(price);
+            total_price = Number(total_price);
+            total_qty = Number(total_qty);
+            qty = Number(qty);
+            console.log([qty, price, total_price, total_qty])
+            if (upOrDown > 0) {
+                total_price = total_price + price;
+                total_qty = total_qty + upOrDown;
+            } else if (upOrDown < 0) {
+                total_price = total_price - price;
+                total_qty = total_qty + upOrDown;
+            }
+            element_subTotal.text(qty * price)
+            element_total_price.attr('data-total-price', total_price).text(total_price);
+            element_total_qty.attr('data-total-qty', total_qty).text(total_qty);
+
+            addOrRemoveProduct(true, currentElementRow.attr('data-product-id'), qty, false)
+        }
+
+        function load_listorder() {
+            var url = urlBuilder.build('fastOrder/custom/Listorder');
+            $('#fastorder__listorder').load(url);
+        }
+
+        function addOrRemoveProduct(action, id, qty = 1, isReloadListOrder = true) {
+            var url = urlBuilder.build('fastOrder/custom/AddToListOrder');
+            storage.post(
+                url,
+                JSON.stringify({
+                    action: action ? 'add' : 'remove',
+                    id: id,
+                    qty: qty
+                }),
+                false
+            ).done(function() {
+                if (isReloadListOrder) {
+                    load_listorder();
+                }
+            }).fail(function() {
+                alert('Something went wrong')
+            });
+
+        }
+
+        $(document).ready(function() {
+
+            // search 
+            var sort_by = $('#fastorder_sort');
+            var show_max = $('#fastorder_show');
+            $('#fastorder_search').on('change', function() {
+                var search = $(this).val();
+
+                var param = "?q=" + search +
+                    "&sort=" + sort_by.val() +
+                    "&show_max=" + show_max.val();
+
+                var url = urlBuilder.build('fastOrder/custom/Searchresult') + param;
+                $('.search__form--result').load(url);
+            });
+            $('#fastorder_search').focusin(function() {
+                isShowFormResult(1);
+            })
+            $('#fastorder_search').focusout(function() {
+                isShowFormResult(0);
+            })
+            $('.search__form--result').on('mouseenter', '.search__item', function() {
+                isShowFormResult(null, 1);
+            });
+            $('.search__form--result').on('mouseleave', '.search__item', function() {
+                isShowFormResult(null, 0);
+            });
+
+            // add product to list order
+            $('.search__form--result').on('click', '[name="orderThis"]', function() {
+                var isAdd = $(this).is(':checked');
+                var product_id = $(this).attr('data-value');
+                addOrRemoveProduct(isAdd, product_id);
+            })
+
+            // remove product in list order
+            $('#fastorder__listorder').on('click', '.icon-trash', function() {
+                var isAdd = false;
+                var product_id = $(this).attr('data-value');
+                addOrRemoveProduct(isAdd, product_id);
+            })
+
+            $('#fastorder__listorder').on('click', '.qty [data-button-qty]', function() {
+                var param = $(this).attr('data-button-qty');
+                var input = $(this).parent().find('input');
+                var price = input.attr('data-product-baseprice');
+                var qty_max = input.attr('data-qty-max');
+
+                if (isNaN(param = Number(param))) return;
+                if (isNaN(qty_max = Number(qty_max))) return;
+
+                input.val(param + Number(input.val()));
+
+                if (input.val() < 1) {
+                    input.val(1)
+                } else if (input.val() > qty_max) {
+                    input.val(qty_max)
+                } else {
+                    reComput(param, input.val(), price, $(this).parents('tr'));
+                };
+            })
+
+            // list order
+            load_listorder();
+        })
+    })
+</script>

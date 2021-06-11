@@ -83,23 +83,18 @@ class Search extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        // if (!$this->getRequest()->isAjax()) {
-        //     $this->_forward('noroute');
-        //     return;
-        // }
-
         $resultJson = $this->jsonFactory->create();
         return $resultJson->setData($this->getCollection());
     }
 
     public function getCollection()
     {
-        $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
         $data = $this->getRequest()->getContent();
         $response = $this->json->unserialize($data);
 
         $search = $response['search'];
+        $sort_product = $response['sort_product'];
+        $show_max = $response['show_max'];
         if (!$search) {
             return false;
         }
@@ -108,22 +103,42 @@ class Search extends \Magento\Framework\App\Action\Action
             ->addAttributeToFilter('name', [
                 'like' => '%' . $search . '%'
             ])
-            ->setPageSize(3)
-            ->setCurPage(1);
+            ->addAttributeToFilter('visibility', ['in' => [3, 4]])
+            ->addPriceData()
+            ->setStoreId($this->getStoreId());
+        if ($sort_product != -1) {
+            $explode = explode('=', $sort_product);
+            if ($explode[0] == 'price') {
+                $data = $data->setOrder('price', $explode[1] === 'asc' ? 'ASC' : 'DESC');
+            } elseif ($explode[0] == 'name') {
+                $data = $data->setOrder('name', $explode[1] === 'asc' ? 'ASC' : 'DESC');
+            }
+        }
+        if (is_numeric($show_max) && $show_max > 0) {
+            $data = $data->setPageSize($show_max)
+                ->setCurPage(1);
+        }
 
         $list = [];
         foreach ($data as &$value) {
             $value['src'] = $this->imageHelper
                 ->init($value, 'product_base_image')
                 ->getUrl();
-            // $productTypeInstance = $_objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable');
-            // $value['options'] = $productTypeInstance->getConfigurableAttributesAsArray($value);
-            // dd($_objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable')->getConfigurableAttributesAsArray($value));
         }
 
         return [
             'data' => array_values($data->toArray()),
             'symbol' => $this->priceCurrency->getCurrencySymbol()
         ];
+    }
+
+    /**
+     * Get store identifier
+     *
+     * @return  int
+     */
+    public function getStoreId()
+    {
+        return $this->storeManager->getStore()->getId();
     }
 }
